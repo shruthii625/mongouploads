@@ -13,7 +13,7 @@ const { appendFileSync } = require('fs');
 const app=express();
 const router= express.Router();
 
-
+var rs="";
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
@@ -38,7 +38,8 @@ con1.then(client => {
     console.log(" change=",change.fullDocument.uploadDate);
     app.locals.myVar = change.fullDocument.filename;
     app.locals.date=change.fullDocument.uploadDate;
-    
+    rs = gfs.createReadStream(app.locals.myVar);
+   // readstream.pipe(res);
    // router.get('/changed/change.fullDocument.filename');
   });
 
@@ -89,17 +90,23 @@ const storage = new GridFsStorage({
    // res.json({file: req.file});
    //await con1.db('image_database').collection('pics').insertOne({createdAt: new Date()});
   //  res.redirect('/changed/:apps.locals.myVar');
-  res.redirect('index');
-
+  //res.redirect('/');
+  //console.log("YO");
+  //await console.log(app.locals.myVar);
+   //const readstream = gfs.createReadStream(app.locals.myVar);
+  //await readstream.pipe(res);
+  
+  //res.render('change');
+  rs.pipe(res);
   });
 
-  app.get('/changed/:filename', (req, res) => {
+  /*app.get('/changed/:filename', (req, res) => {
     const filename=req.params.filename;
-    console.log("file name coming is "+filename)
+    console.log(filename)
     const readstream = gfs.createReadStreamfilename(filename);
     readstream.pipe(res);
 
-  });
+  });*/
   
  
   
@@ -110,7 +117,7 @@ const storage = new GridFsStorage({
 
   
   
-  app.get('/image/:filename', (req, res) => {
+  /*app.get('/image/:filename', (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
       if (!file || file.length === 0) {
@@ -130,8 +137,9 @@ const storage = new GridFsStorage({
         });
       }
     });
-  });
+  });*/
 
+ 
   
 const port=5000; 
 
