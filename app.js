@@ -12,7 +12,8 @@ const mongodb=require ('mongodb');
 const { appendFileSync } = require('fs');
 const app=express();
 const router= express.Router();
-
+const url = require('url');
+var imgurl="";
 var rs="";
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
@@ -39,6 +40,7 @@ con1.then(client => {
     app.locals.myVar = change.fullDocument.filename;
     app.locals.date=change.fullDocument.uploadDate;
     rs = gfs.createReadStream(app.locals.myVar);
+
    // readstream.pipe(res);
    // router.get('/changed/change.fullDocument.filename');
   });
@@ -97,7 +99,12 @@ const storage = new GridFsStorage({
   //await readstream.pipe(res);
   
   //res.render('change');
+
+  imgurl= req.protocol + '://' + req.get('host') +'/image/'+app.locals.myVar;
+  console.log(imgurl);
   rs.pipe(res);
+
+
   });
 
   /*app.get('/changed/:filename', (req, res) => {
@@ -117,7 +124,7 @@ const storage = new GridFsStorage({
 
   
   
-  /*app.get('/image/:filename', (req, res) => {
+  app.get('/image/:filename', (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
       if (!file || file.length === 0) {
@@ -137,7 +144,7 @@ const storage = new GridFsStorage({
         });
       }
     });
-  });*/
+  });
 
  
   
